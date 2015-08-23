@@ -7,6 +7,7 @@ import io.grappl.core.HostData;
 import io.grappl.host.exclient.ExClient;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -37,8 +38,19 @@ public class Host {
     }
 
     public void openServer() {
+        final Host host = this;
+
         int port = getRelay().getPortAllocator().getPort();
         hostData = new HostData(associatedUser, controlSocket.getInetAddress().getHostAddress().toString(), port);
+
+        PrintStream printStream = null;
+        try {
+            printStream = new PrintStream(getControlSocket().getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        printStream.println(port +"");
+        final PrintStream theStream = printStream;
 
         try {
             // Initialize associated servers
@@ -54,7 +66,9 @@ public class Host {
                         try {
                             Socket socket = applicationSocket.accept();
 
-                            ExClient exClient = new ExClient(socket);
+                            ExClient exClient = new ExClient(host, socket);
+                            theStream.println(socket.getInetAddress().toString());
+                            exClient.start();
                             exClientList.add(exClient);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -94,5 +108,9 @@ public class Host {
 
     public Socket getControlSocket() {
         return controlSocket;
+    }
+
+    public ServerSocket getMessageSocket() {
+        return messageSocket;
     }
 }
