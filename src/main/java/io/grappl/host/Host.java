@@ -23,6 +23,7 @@ public class Host {
     private String associatedUser;
     private Socket controlSocket;
     private int port;
+    private String user = "Anonymous";
     private long heartBeatTime;
     private List<ExClient> exClientList = new ArrayList<ExClient>();
 
@@ -142,7 +143,7 @@ public class Host {
     }
 
     public HostSnapshot getHostSnapshot() {
-        return new HostSnapshot("", getApplicationSocket().getLocalPort(), getExClientCount());
+        return new HostSnapshot(user, controlSocket.getInetAddress().getHostAddress(), getApplicationSocket().getLocalPort(), getExClientCount());
     }
 
     public ServerSocket getMessageSocket() {

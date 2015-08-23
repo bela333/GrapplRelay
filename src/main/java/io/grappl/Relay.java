@@ -104,7 +104,7 @@ public class Relay {
                                                 e.printStackTrace();
                                             }
                                         }
-                                    } catch (IOException e) {
+                                    } catch (Exception e) {
                                         try {
                                             hostByAddress.get(server).closeHost();
                                         } catch (Exception ignore) {

@@ -31,6 +31,10 @@ public class CommandManager {
             Host host = relay.getHostByPort(port);
             host.closeHost();
         }
+
+        if(commandName.equalsIgnoreCase("hosts")) {
+            Log.log(relay.getHostList().size() + " hosts open");
+        }
     }
 
     public void startCommandThread() {

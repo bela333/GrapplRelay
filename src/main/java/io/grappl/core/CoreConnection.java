@@ -19,6 +19,8 @@ public class CoreConnection {
     public CoreConnection(Socket socket) {
         this.socket = socket;
 
+        System.out.println("Connected to core");
+
         try {
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
