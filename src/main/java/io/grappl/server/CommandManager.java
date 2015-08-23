@@ -1,7 +1,7 @@
-package io.grappl;
+package io.grappl.server;
 
-import io.grappl.host.Host;
-import io.grappl.logging.Log;
+import io.grappl.server.host.Host;
+import io.grappl.server.logging.Log;
 
 import java.util.Scanner;
 

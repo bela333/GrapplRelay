@@ -1,10 +1,10 @@
-package io.grappl.host;
+package io.grappl.server.host;
 
 import com.google.gson.Gson;
-import io.grappl.Application;
-import io.grappl.Relay;
-import io.grappl.host.exclient.ExClient;
-import io.grappl.logging.Log;
+import io.grappl.server.Application;
+import io.grappl.server.Relay;
+import io.grappl.server.host.exclient.ExClient;
+import io.grappl.server.logging.Log;
 
 import java.io.IOException;
 import java.io.PrintStream;

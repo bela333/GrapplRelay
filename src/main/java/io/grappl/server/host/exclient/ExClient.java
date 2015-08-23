@@ -1,7 +1,7 @@
-package io.grappl.host.exclient;
+package io.grappl.server.host.exclient;
 
-import io.grappl.host.Host;
-import io.grappl.logging.Log;
+import io.grappl.server.host.Host;
+import io.grappl.server.logging.Log;
 
 import java.io.*;
 import java.net.Socket;

@@ -1,9 +1,9 @@
-package io.grappl;
+package io.grappl.server;
 
-import io.grappl.core.CoreConnection;
-import io.grappl.host.Host;
-import io.grappl.logging.Log;
-import io.grappl.port.PortAllocator;
+import io.grappl.server.core.CoreConnection;
+import io.grappl.server.host.Host;
+import io.grappl.server.logging.Log;
+import io.grappl.server.port.PortAllocator;
 
 import java.io.DataInputStream;
 import java.io.IOException;

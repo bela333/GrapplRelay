@@ -1,6 +1,6 @@
-package io.grappl.host;
+package io.grappl.server.host;
 
-import io.grappl.Application;
+import io.grappl.server.Application;
 
 public class HostSnapshot {
 

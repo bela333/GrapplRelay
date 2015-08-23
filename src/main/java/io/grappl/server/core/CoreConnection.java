@@ -1,8 +1,8 @@
-package io.grappl.core;
+package io.grappl.server.core;
 
-import io.grappl.Application;
-import io.grappl.host.HostData;
-import io.grappl.host.exclient.ExClientData;
+import io.grappl.server.Application;
+import io.grappl.server.host.HostData;
+import io.grappl.server.host.exclient.ExClientData;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

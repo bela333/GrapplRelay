@@ -1,8 +1,8 @@
-package io.grappl;
+package io.grappl.server;
 
 import com.google.gson.Gson;
-import io.grappl.core.CoreConnection;
-import io.grappl.logging.Log;
+import io.grappl.server.core.CoreConnection;
+import io.grappl.server.logging.Log;
 
 import java.io.IOException;
 import java.net.Socket;

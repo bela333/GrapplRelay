@@ -1,4 +1,4 @@
-package io.grappl.port;
+package io.grappl.server.port;
 
 import java.net.ServerSocket;
 import java.util.HashSet;
