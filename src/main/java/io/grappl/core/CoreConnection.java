@@ -1,10 +1,11 @@
 package io.grappl.core;
 
-import io.grappl.host.Host;
+import io.grappl.Application;
+import io.grappl.host.HostData;
+import io.grappl.host.exclient.ExClientData;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
@@ -31,28 +32,39 @@ public class CoreConnection {
         return socket;
     }
 
-    public void updateStats(Host host) {
+    public void serverConnected(HostData hostData) {
         try {
             dataOutputStream.writeByte(1);
-
-        } catch (IOException e) {
+            printStream.println(Application.getGson().toJson(hostData));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void serverConnected(HostData hostData) {
-
-    }
-
     public void serverDisconnected(HostData hostData) {
-
+        try {
+            dataOutputStream.writeByte(2);
+            printStream.println(Application.getGson().toJson(hostData));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void clientConnected() {
-
+    public void clientConnected(ExClientData exClientData) {
+        try {
+            dataOutputStream.writeByte(3);
+            printStream.println(Application.getGson().toJson(exClientData));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void clientDisconnected() {
-
+    public void clientDisconnected(ExClientData exClientData) {
+        try {
+            dataOutputStream.writeByte(4);
+            printStream.println(Application.getGson().toJson(exClientData));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

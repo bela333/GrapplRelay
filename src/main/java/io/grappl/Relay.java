@@ -1,9 +1,11 @@
 package io.grappl;
 
+import io.grappl.core.CoreConnection;
 import io.grappl.host.Host;
 import io.grappl.logging.Log;
 import io.grappl.port.PortAllocator;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -21,12 +23,26 @@ public class Relay {
     private ServerSocket heartBeatServer;
 
     private Map<InetAddress, Host> hostByAddress = new HashMap<InetAddress, Host>();
+    private Map<Integer, Host> hostByPort = new HashMap<Integer, Host>();
 
     // The port allocator is the source of host's exposed ports
     private PortAllocator portAllocator;
 
-    public Relay() {
+    private Application application;
+    private RelayType relayType;
+
+    public Relay(Application application, RelayType relayType) {
+        this.application = application;
+        this.relayType = relayType;
         portAllocator = new PortAllocator();
+    }
+
+    public RelayType getRelayType() {
+        return relayType;
+    }
+
+    public Application getApplication() {
+        return application;
     }
 
     /**
@@ -66,8 +82,40 @@ public class Relay {
                 public void run() {
                     while(true) {
                         try {
-                            Socket relayConnection = heartBeatServer.accept();
-                            //TODO: handle heartbeat
+
+                            /* Start imported old code */
+                            final Socket heartBeatClient = heartBeatServer.accept();
+
+                            final InetAddress server = heartBeatClient.getInetAddress();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        DataInputStream dataInputStream = new DataInputStream(heartBeatClient
+                                                .getInputStream());
+                                        while(true) {
+                                            int time = dataInputStream.readInt();
+
+                                            hostByAddress.get(server).beatHeart();
+
+                                            try {
+                                                Thread.sleep(50);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    } catch (IOException e) {
+                                        try {
+                                            hostByAddress.get(server).closeHost();
+                                        } catch (Exception ignore) {
+
+                                        }
+                                    }
+                                }
+                            }).start();
+                            /* End imported old code */
+
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -95,15 +143,31 @@ public class Relay {
     public void addHost(Host host) {
         hostList.add(host);
         hostByAddress.put(host.getControlSocket().getInetAddress(), host);
+        hostByPort.put(host.getApplicationSocket().getLocalPort(), host);
+
+        if(getRelayType() == RelayType.CORE) {
+            CoreConnection coreConnection = getApplication().getCoreConnection();
+            coreConnection.serverConnected(host.getHostData());
+        }
     }
 
     public void removeHost(Host host) {
         hostList.remove(host);
         hostByAddress.remove(host.getControlSocket().getInetAddress(), host);
+        hostByPort.remove(host.getApplicationSocket().getLocalPort(), host);
+
+        if(getRelayType() == RelayType.CORE) {
+            CoreConnection coreConnection = getApplication().getCoreConnection();
+            coreConnection.serverDisconnected(host.getHostData());
+        }
     }
 
     public Host getHostByAddress(InetAddress inetAddress) {
         return hostByAddress.get(inetAddress);
+    }
+
+    public Host getHostByPort(int port) {
+        return hostByPort.get(port);
     }
 
     public List<Host> getHostList() {

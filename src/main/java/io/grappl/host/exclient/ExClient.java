@@ -1,6 +1,7 @@
 package io.grappl.host.exclient;
 
 import io.grappl.host.Host;
+import io.grappl.logging.Log;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,7 +29,13 @@ public class ExClient {
         }
     }
 
+    public Host getHost() {
+        return host;
+    }
+
     public void start() {
+        Log.debug("ExClient connected from " + socket.getInetAddress().toString() + ":" + socket.getPort());
+        Log.debug(getHost().getApplicationSocket().getLocalPort() + ":" + getHost().getExClientList().size() + " clients connected");
         final Socket local = socket;
 
         /* Start imported old code */
@@ -59,6 +66,7 @@ public class ExClient {
                                 try {
                                     local.close();
                                     remote.close();
+                                    close();
                                 } catch (IOException e1) {
 //                                    e1.printStackTrace();
                                 }
@@ -67,6 +75,7 @@ public class ExClient {
                             try {
                                 local.close();
                                 remote.close();
+                                close();
                             } catch (IOException e) {
 //                                e.printStackTrace();
                             }
@@ -94,6 +103,7 @@ public class ExClient {
                                 try {
                                     local.close();
                                     remote.close();
+                                    close();
                                 } catch (IOException e1) {
 //                                    e1.printStackTrace();
                                 }
@@ -102,6 +112,7 @@ public class ExClient {
                             try {
                                 local.close();
                                 remote.close();
+                                close();
                             } catch (IOException e) {
 //                                e.printStackTrace();
                             }
@@ -118,7 +129,16 @@ public class ExClient {
     }
 
     public void close() {
-        isClosed = true;
+        if(!isClosed) {
+            isClosed = true;
+            Log.debug("ExClient disconnected from " + socket.getInetAddress().toString() + ":" + socket.getPort());
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            host.disassociate(this);
+        }
     }
 
     /**

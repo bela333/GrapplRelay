@@ -1,4 +1,4 @@
-package io.grappl.core;
+package io.grappl.host;
 
 import java.util.UUID;
 
