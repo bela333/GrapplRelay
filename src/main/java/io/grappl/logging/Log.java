@@ -1,4 +1,4 @@
-package io.grappl;
+package io.grappl.logging;
 
 public class Log {
 

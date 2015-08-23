@@ -1,6 +1,6 @@
 package io.grappl.core;
 
-import io.grappl.Host;
+import io.grappl.host.Host;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,8 +15,8 @@ public class CoreConnection {
     private DataOutputStream dataOutputStream;
     private PrintStream printStream;
 
-    public CoreConnection() {
-        socket = new Socket();
+    public CoreConnection(Socket socket) {
+        this.socket = socket;
 
         try {
             dataInputStream = new DataInputStream(socket.getInputStream());

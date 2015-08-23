@@ -26,14 +26,13 @@ public class PortAllocator {
             socket = new ServerSocket(port);
         } catch (Exception e) {
             e.printStackTrace();
-
-            try {
-                socket.close();
-            } catch (Exception f) {
-                f.printStackTrace();
-            }
-
             return true;
+        }
+
+        try {
+            socket.close();
+        } catch (Exception f) {
+            f.printStackTrace();
         }
 
         return occupiedPorts.contains(port);

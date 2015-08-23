@@ -1,8 +1,8 @@
-package io.grappl.core;
+package io.grappl.host.exclient;
 
 import java.util.UUID;
 
-public class HostData {
+public class ExClientData {
 
     private UUID uuid;
     private String userHosting;
@@ -12,7 +12,7 @@ public class HostData {
     private boolean isOpen;
     private long timeOpenFor = 0;
 
-    public HostData(String userHosting, String hostAddress, int portNum) {
+    public ExClientData(String userHosting, String hostAddress, int portNum) {
         this.uuid = UUID.randomUUID();
         this.userHosting = userHosting;
         this.hostAddress = hostAddress;
