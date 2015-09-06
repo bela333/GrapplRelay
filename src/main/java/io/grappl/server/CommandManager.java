@@ -3,6 +3,7 @@ package io.grappl.server;
 import io.grappl.server.host.Host;
 import io.grappl.server.logging.Log;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class CommandManager {
@@ -25,15 +26,42 @@ public class CommandManager {
             Log.log(host.getHostSnapshot().toJson());
         }
 
-        if(commandName.equalsIgnoreCase("close")) {
+        else if(commandName.equalsIgnoreCase("close")) {
             final int port = Integer.parseInt(parts[1]);
 
             Host host = relay.getHostByPort(port);
             host.closeHost();
         }
 
-        if(commandName.equalsIgnoreCase("hosts")) {
+        else if(commandName.equalsIgnoreCase("hosts")) {
             Log.log(relay.getHostList().size() + " hosts open");
+        }
+
+        /* Begin imported old code */
+        else if(commandName.equalsIgnoreCase("hostlist")) {
+            List<Host> hosts = relay.getHostList();
+
+            String output = hosts.size() + " host(s): ";
+
+            for (int i = 0; i < hosts.size(); i++) {
+                if(i != 0) {
+                    output += " - ";
+                }
+                Host host = hosts.get(i);
+
+                output += host.getControlSocket().getInetAddress().toString() + ":" + host.getPort();
+            }
+
+            Log.log(output);
+        }
+        /* End old code */
+
+        else if(commandName.equalsIgnoreCase("quit")) {
+            System.exit(0);
+        }
+
+        else {
+            Log.log("Command not found");
         }
     }
 

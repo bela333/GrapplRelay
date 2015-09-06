@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="GrapplRelay">
-    <output-path>$PROJECT_DIR$/out/artifacts/GrapplRelay</output-path>
+    <output-path>$USER_HOME$/Dropbox/Public/Relay</output-path>
     <root id="archive" name="GrapplRelay.jar">
       <element id="module-output" name="GrapplRelay" />
       <element id="directory" name="META-INF">

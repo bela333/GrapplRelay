@@ -27,9 +27,10 @@ public class Host {
     private long heartBeatTime;
     private List<ExClient> exClientList = new ArrayList<ExClient>();
 
-    public Host(Relay relay, Socket authSocket) {
+    public Host(Relay relay, Socket authSocket, String associatedUser) {
         this.relay = relay;
         this.controlSocket = authSocket;
+        this.associatedUser = associatedUser;
     }
 
     public Relay getRelay() {
@@ -43,7 +44,7 @@ public class Host {
     public void openServer() {
         final Host host = this;
 
-        port = getRelay().getPortAllocator().getPort();
+        port = getRelay().getPortAllocator().getPort(controlSocket.getInetAddress().toString());
         hostData = new HostData(associatedUser, controlSocket.getInetAddress().getHostAddress().toString(), port);
 
         PrintStream printStream = null;
@@ -90,6 +91,8 @@ public class Host {
 
     public void closeHost() {
         if(isOpen) {
+            isOpen = false;
+
             Log.debug("Closing server at " + getPort());
 
             try {
@@ -100,8 +103,6 @@ public class Host {
             }
 
             getRelay().removeHost(this);
-
-            isOpen = false;
         }
     }
 
@@ -148,5 +149,9 @@ public class Host {
 
     public ServerSocket getMessageSocket() {
         return messageSocket;
+    }
+
+    public String getAssociatedUser() {
+        return associatedUser;
     }
 }

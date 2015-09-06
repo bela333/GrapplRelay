@@ -32,6 +32,51 @@ public class ExClient {
     public Host getHost() {
         return host;
     }
+//
+//    public void start() {
+//        Log.debug("ExClient connected from " + socket.getInetAddress().toString() + ":" + socket.getPort());
+//        Log.debug(getHost().getApplicationSocket().getLocalPort() + ":" + getHost().getExClientList().size() + " clients connected");
+//
+//        final Socket local = socket;
+//
+//        Thread anotherExClietn = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Socket remote = getHost().getMessageSocket().accept();
+//
+//                    try {
+//                        while (true) {
+//                            int size;
+//                            byte[] buffer = new byte[4096];
+//
+//                            System.out.println("reading");
+//
+//                            if(local.getInputStream().available() > 0) {
+//                                if ((size = local.getInputStream().read(buffer)) != 1) {
+//                                    remote.getOutputStream().write(buffer, 0, size);
+//                                }
+//                            }
+//
+//                            if(remote.getInputStream().available() > 0) {
+//                                if ((size = remote.getInputStream().read(buffer)) != 1) {
+//                                    local.getOutputStream().write(buffer, 0, size);
+//                                }
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        local.close();
+//                        remote.close();
+//                        close();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        });
+//        anotherExClietn.start();
+//    }
 
     public void start() {
         Log.debug("ExClient connected from " + socket.getInetAddress().toString() + ":" + socket.getPort());

@@ -34,7 +34,7 @@ public class Application {
     }
 
     public Application() {
-        relay = new Relay(this, RelayType.OTHER);
+        relay = new Relay(this, RelayType.CORE);
 
         CommandManager commandManager = new CommandManager(relay);
         commandManager.startCommandThread();
@@ -50,8 +50,8 @@ public class Application {
         Log.log("Connecting to core server...");
 
         try {
-            Socket socket = new Socket("grappl.io", Globals.RELAY_CONTROL_PORT);
-            coreConnection = new CoreConnection(socket);
+            Socket socket = new Socket(Globals.CORE_SERVER_LOC, Globals.RELAY_CONTROL_PORT);
+            coreConnection = new CoreConnection(getRelay(), socket);
         } catch (IOException e) {
             e.printStackTrace();
         }

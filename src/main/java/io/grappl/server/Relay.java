@@ -1,7 +1,9 @@
 package io.grappl.server;
 
 import io.grappl.server.core.CoreConnection;
+import io.grappl.server.core.RelayData;
 import io.grappl.server.host.Host;
+import io.grappl.server.host.UserData;
 import io.grappl.server.logging.Log;
 import io.grappl.server.port.PortAllocator;
 
@@ -25,6 +27,10 @@ public class Relay {
     private Map<InetAddress, Host> hostByAddress = new HashMap<InetAddress, Host>();
     private Map<Integer, Host> hostByPort = new HashMap<Integer, Host>();
 
+    private Map<String, Integer> associationMap = new HashMap<String, Integer>();
+
+    private Map<InetAddress, UserData> userAssociations = new HashMap<InetAddress, UserData>();
+
     // The port allocator is the source of host's exposed ports
     private PortAllocator portAllocator;
 
@@ -34,7 +40,7 @@ public class Relay {
     public Relay(Application application, RelayType relayType) {
         this.application = application;
         this.relayType = relayType;
-        portAllocator = new PortAllocator();
+        portAllocator = new PortAllocator(this);
     }
 
     public RelayType getRelayType() {
@@ -66,7 +72,7 @@ public class Relay {
                     while(true) {
                         try {
                             Socket relayConnection = relayControlServer.accept();
-                            Host host = new Host(relayServer, relayConnection);
+                            Host host = new Host(relayServer, relayConnection, "Anonymous");
                             host.openServer();
                             addHost(host);
                         } catch (Exception e) {
@@ -153,13 +159,18 @@ public class Relay {
 
     public void removeHost(Host host) {
         hostList.remove(host);
-        hostByAddress.remove(host.getControlSocket().getInetAddress(), host);
-        hostByPort.remove(host.getApplicationSocket().getLocalPort(), host);
+        hostByAddress.remove(host.getControlSocket().getInetAddress());
+        hostByPort.remove(host.getApplicationSocket().getLocalPort());
 
         if(getRelayType() == RelayType.CORE) {
             CoreConnection coreConnection = getApplication().getCoreConnection();
             coreConnection.serverDisconnected(host.getHostData());
         }
+    }
+
+    public void associate(String ip, int port) {
+        Log.log("Associating ip with port: " + port);
+        associationMap.put(ip, port);
     }
 
     public Host getHostByAddress(InetAddress inetAddress) {
@@ -184,5 +195,13 @@ public class Relay {
 
     public ServerSocket getHeartBeatServer() {
         return heartBeatServer;
+    }
+
+    public Map<String, Integer> getAssociationMap() {
+        return associationMap;
+    }
+
+    public RelayData getRelayData() {
+        return new RelayData("nope", "avi");
     }
 }
