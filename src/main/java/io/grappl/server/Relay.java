@@ -91,17 +91,23 @@ public class Relay {
 
                             /* Start imported old code */
                             final Socket heartBeatClient = heartBeatServer.accept();
+//                            System.out.println("accepted heartbeat conncetion");
 
-                            final InetAddress server = heartBeatClient.getInetAddress();
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
+
+                                    final InetAddress server = heartBeatClient.getInetAddress();
                                     try {
+                                        Thread.sleep(350);
                                         DataInputStream dataInputStream = new DataInputStream(heartBeatClient
-                                                .getInputStream());
+                                            .getInputStream());
+
+//                                        System.out.println("in");
                                         while(true) {
                                             int time = dataInputStream.readInt();
 
+//                                            System.out.println(server + " hearbeat");
                                             hostByAddress.get(server).beatHeart();
 
                                             try {

@@ -64,11 +64,15 @@ public class Host {
             Log.debug("Host hosting @ [" + port + "|" + (port + 1) + "]");
             Log.debug(getHostSnapshot().toJson());
 
+            isOpen = true;
             Thread watchingThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                 try {
+//                    System.out.println("started");
+
                     while(true) {
+//                        System.out.println("In loop");
                         Socket socket = applicationSocket.accept();
 
                         ExClient exClient = new ExClient(host, socket);
@@ -76,14 +80,15 @@ public class Host {
                         exClientList.add(exClient);
                         exClient.start();
                     }
-                } catch (IOException e) {
+                } catch (Throwable e) {
+//                    System.out.println("Exception fired");
                     closeHost();
                 }
                 }
             });
             watchingThread.start();
 
-            isOpen = true;
+//            System.out.println("completely");
         } catch (IOException e) {
             e.printStackTrace();
         }
