@@ -10,5 +10,7 @@ public class Globals {
     public static final int MESSAGING_PORT = 25564;
     public static final int HEARTBEAT_PORT = 25570;
 
-    public static final String CORE_SERVER_LOC = "45.55.45.141";
+    public static final String CORE_SERVER_LOC = "x.grappl.io";
+
+    public static boolean connectedToCore = false;
 }

@@ -1,6 +1,7 @@
 package io.grappl.server.core;
 
 import io.grappl.server.Application;
+import io.grappl.server.Globals;
 import io.grappl.server.Relay;
 import io.grappl.server.host.HostData;
 import io.grappl.server.host.exclient.ExClientData;
@@ -29,6 +30,7 @@ public class CoreConnection {
 
         isUp = true;
         Log.log("Connected to core");
+        Globals.connectedToCore = true;
 
         try {
             dataInputStream = new DataInputStream(socket.getInputStream());
@@ -42,25 +44,28 @@ public class CoreConnection {
             @Override
             public void run() {
                 try {
-                    byte code = dataInputStream.readByte();
-                    Log.log("Received message: code: " + code);
+                    while (true) {
+                        byte code = dataInputStream.readByte();
+                        Log.log("Received message: code: " + code);
 
-                    // Incoming auth message
-                    if(code == 0) {
-                        String message = dataInputStream.readLine();
-                        String[] spl = message.split("\\s+");
+                        // Incoming auth message
+                        if (code == 0) {
+                            System.out.println("Waiting...");
+                            String message = dataInputStream.readLine();
+                            String[] spl = message.split("\\s+");
 
-                        String ip = spl[0];
-                        String port = spl[1];
-//                        String username = spl[2];
+                            String ip = spl[0];
+                            String port = spl[1];
 
-                        Log.log("Associating " + ip + " with " + port);
-                        int thePort = Integer.parseInt(port);
+                            Log.log("Associating " + ip + " with " + port);
+                            int thePort = Integer.parseInt(port);
 
-                        getRelay().associate(ip, thePort);
+                            getRelay().associate(ip, thePort);
+                        }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.log("Connection broken with core server");
+                    Globals.connectedToCore = false;
                 }
             }
         });

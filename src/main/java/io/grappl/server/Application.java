@@ -11,18 +11,37 @@ public class Application {
 
     private Relay relay;
     private CoreConnection coreConnection;
+    public static Application application;
 
     private static Gson gson;
 
     public static void main(String[] args) {
 
-        Application application = new Application();
+        application = new Application();
 
         if(args.length == 1) {
             final String connectToCore = args[0];
 
             if (connectToCore.equalsIgnoreCase("-core")) {
                 application.connectToCore();
+
+                Thread coreWatcher = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while(true) {
+                            try {
+                                Thread.sleep(15000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                            if(!Globals.connectedToCore) {
+                                application.connectToCore();
+                            }
+                        }
+                    }
+                });
+                coreWatcher.start();
             }
         }
     }

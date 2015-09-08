@@ -56,6 +56,10 @@ public class CommandManager {
         }
         /* End old code */
 
+        else if(commandName.equalsIgnoreCase("coreconnect")) {
+            Application.application.connectToCore();
+        }
+
         else if(commandName.equalsIgnoreCase("quit")) {
             System.exit(0);
         }
