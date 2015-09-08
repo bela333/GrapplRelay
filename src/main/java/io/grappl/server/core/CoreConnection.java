@@ -46,11 +46,11 @@ public class CoreConnection {
                 try {
                     while (true) {
                         byte code = dataInputStream.readByte();
-                        Log.log("Received message: code: " + code);
+//                        Log.log("Received message: code: " + code);
 
                         // Incoming auth message
                         if (code == 0) {
-                            System.out.println("Waiting...");
+//                            System.out.println("Waiting...");
                             String message = dataInputStream.readLine();
                             String[] spl = message.split("\\s+");
 

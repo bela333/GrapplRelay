@@ -72,7 +72,8 @@ public class Application {
             Socket socket = new Socket(Globals.CORE_SERVER_LOC, Globals.RELAY_CONTROL_PORT);
             coreConnection = new CoreConnection(getRelay(), socket);
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            System.out.println("Connection to core failed");
         }
     }
 
