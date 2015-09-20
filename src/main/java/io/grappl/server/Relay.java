@@ -17,16 +17,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The {@code Relay} class represents a single relay server.
+ * It contains methods to interact with the state of that
+ * server, manage the server's connection with the core,
+ * and manage all the Grappl hosts connected to this relay.
+ */
 public class Relay {
 
+    /** A list of all Grappl hosts currently connected. */
     private List<Host> hostList = new ArrayList<Host>();
-
-    private ServerSocket relayControlServer;
-    private ServerSocket heartBeatServer;
-
     private Map<InetAddress, Host> hostByAddress = new HashMap<InetAddress, Host>();
     private Map<Integer, Host> hostByPort = new HashMap<Integer, Host>();
 
+    /** Server socket for relay control connections */
+    private ServerSocket relayControlServer;
+
+    /** Server socket for heartbeat connection */
+    private ServerSocket heartBeatServer;
+
+    /** A map of associations between IPs and ports. Used primarily for static ports. */
     private Map<String, Integer> associationMap = new HashMap<String, Integer>();
 
     private Map<InetAddress, UserData> userAssociations = new HashMap<InetAddress, UserData>();
@@ -34,7 +44,10 @@ public class Relay {
     // The port allocator is the source of host's exposed ports
     private PortAllocator portAllocator;
 
+    /** The process this relay is associated with */
     private Application application;
+
+    /** The type of relay this is (private, or core integrated) */
     private RelayType relayType;
 
     public Relay(Application application, RelayType relayType) {
@@ -176,6 +189,17 @@ public class Relay {
 
     public void associate(String ip, int port) {
         Log.log("Associating ip with port: " + port);
+
+        try {
+            InetAddress inetAddress = InetAddress.getByName(ip.substring(1, ip.length()));
+            Host host = getHostByAddress(inetAddress);
+            if (host != null) {
+                host.closeHost();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         associationMap.put(ip, port);
     }
 
