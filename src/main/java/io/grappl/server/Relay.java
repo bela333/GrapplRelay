@@ -79,6 +79,9 @@ public class Relay {
             heartBeatServer = new ServerSocket(Globals.HEARTBEAT_PORT);
             Log.log("Started heartbeat server @ " + Globals.HEARTBEAT_PORT);
 
+            /**
+             * Thread that listens for relay control connections from Grappl clients
+             */
             Thread relayListener = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -96,6 +99,9 @@ public class Relay {
             });
             relayListener.start();
 
+            /**
+             * Thread that for heartbeat connections from Grappl clients
+             */
             Thread heartBeatListener = new Thread(new Runnable() {
                 @Override
                 public void run() {
